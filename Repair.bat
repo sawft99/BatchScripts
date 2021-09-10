@@ -13,7 +13,7 @@ sfc /scannow
 echo.
 echo SFC scan done...
 echo.
-echo Scheduling CHKNTFS  and CHKDSK on next reboot
+echo Scheduling CHKNTFS and CHKDSK on next reboot
 chkntfs /c %Systemdrive%
 cd /d C:\
 chkdsk /f /r /x /b
