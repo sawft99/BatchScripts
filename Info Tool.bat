@@ -9,11 +9,11 @@ echo ====================
 echo Info gathering tool
 echo ====================
 echo.
-echo Select what info/tool you would like:
+echo Info & Tools:
 echo.
 echo 1) Basic Computer Info (Name, OS, CPU, etc)
-echo 2) Network Info (Ip, subnet, etc)
-echo 3) Network Test (Ping and other resources)
+echo 2) Network Info (IP, Subnet, Etc)
+echo 3) Network Test (Ping and Tracert)
 echo 4) Exit
 echo.
 choice /n /c 1234 /m "Select 1-4: "
@@ -25,13 +25,23 @@ if %ERRORLEVEL% ==4 goto Exit
 :Computerinfo
 cls
 echo ====================
-echo      OS Info
+echo Computer System Info
 echo ====================
-wmic os get Caption, CSName, OSArchitecture, Version, InstallDate
+wmic computersystem get Manufacturer, Model, NumberOfProcessors, SystemFamily
+wmic systemenclosure get SerialNumber
 echo ====================
 echo   Motherboard Info
 echo ====================
 wmic baseboard get Product, Manufacturer, Model
+echo ====================
+echo       OS Info
+echo ====================
+wmic os get Caption, CSName, OSArchitecture, Version, InstallDate
+echo ====================
+echo      BIOS Info
+echo ====================
+wmic bios get Manufacturer, Name, Version, SerialNumber, ReleaseDate
+wmic bios get SMBIOSBIOSVersion, Description, Caption
 echo ====================
 echo      CPU Info
 echo ====================
@@ -41,12 +51,7 @@ echo     Memory Info
 echo ====================
 wmic memorychip get Caption, Capacity, ConfiguredClockSpeed, DataWidth, DeviceLocator
 echo ====================
-echo Computer System Info
-echo ====================
-wmic computersystem get Manufacturer, Model, NumberOfProcessors, SystemFamily
-wmic systemenclosure get SerialNumber 
-echo ====================
-echo      Login info
+echo      Login Info
 echo ====================
 wmic netlogin get Name, BadPasswordCount
 echo ====================
