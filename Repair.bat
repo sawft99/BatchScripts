@@ -1,9 +1,9 @@
 @echo off
 SETLOCAL ENABLEEXTENSIONS
-title Windows 7 and 10 OS Repair Script...
+title Windows 7 and up OS Repair Script...
 color 0a
-echo This will run an SFC scan for Windows 7 and a CHKNTFS command will be set to run on reboot.
-echo DISM will also run if this is Windows 10.
+echo This will run an SFC, CHKDSK, and CHKNTFS scan for Windows 7.
+echo DISM will also run if this is Windows 10 and up.
 echo.
 Pause
 echo.
@@ -20,7 +20,7 @@ chkdsk /f /r /x /b
 echo.
 echo Check scheduled.
 echo.
-echo Checking for Windows 10...
+echo Checking if Windows 10 or higher...
 Ver | find /i "Version 10."
 if %errorlevel% == 0 goto Run else goto Exit
 :Run
