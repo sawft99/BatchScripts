@@ -5,24 +5,24 @@ color 0a
 
 :Start
 cls
-echo ====================
-echo Info gathering tool
-echo ====================
+echo ============================
+echo Basic Info and Network Tests
+echo ============================
 echo.
-echo Info & Tools:
+echo Operations:
 echo.
-echo 1) Basic Computer Info (Name, OS, CPU, etc)
-echo 2) Network Info (IP, Subnet, Etc)
-echo 3) Network Test (Ping and Tracert)
+echo 1) Get Basic Computer Info (Name, OS, CPU, etc)
+echo 2) Get Network Info (IP, Subnet, Etc)
+echo 3) Test Network (Ping and Tracert)
 echo 4) Exit
 echo.
 choice /n /c 1234 /m "Select 1-4: "
-if %ERRORLEVEL% ==1 goto Computerinfo
-if %ERRORLEVEL% ==2 goto Networkinfo
-if %ERRORLEVEL% ==3 goto Networktests
+if %ERRORLEVEL% ==1 goto ComputerInfo
+if %ERRORLEVEL% ==2 goto NetworkInfo
+if %ERRORLEVEL% ==3 goto NetworkTests
 if %ERRORLEVEL% ==4 goto Exit
 
-:Computerinfo
+:ComputerInfo
 cls
 echo ====================
 echo Computer System Info
@@ -54,17 +54,27 @@ echo ====================
 echo      Login Info
 echo ====================
 wmic netlogin get Name, BadPasswordCount
-echo ====================
-echo     Domain Info
-echo ====================
-wmic ntdomain get Caption, DomainControllerAddress, DomainControllerName, DomainName, DNSForestName, DomainName, Status
-echo.
-echo Note: date format YYYY/MM/DD~
-echo.
-pause
-goto Start
 
-:Networkinfo
+wmic computersystem | Findstr /i "WORKGROUP" >NUL
+if %errorlevel% ==1 (
+	echo ====================
+	echo     Domain Info
+	echo ====================
+	wmic ntdomain get Caption, DomainControllerAddress, DomainControllerName, DomainName, DNSForestName, DomainName, Status
+	echo.
+	echo Note: date format YYYY/MM/DD~
+	echo.
+	pause
+	goto Start
+) else (
+	echo.
+	echo Note: date format YYYY/MM/DD~
+	echo.
+	pause
+	goto Start
+)
+
+:NetworkInfo
 cls
 echo ====================
 echo Connected Interfaces
@@ -82,38 +92,36 @@ if %ERRORLEVEL% ==1 (Echo Not a valid interface. Enter the coresponding IDX numb
 netsh int ipv4 show dnsservers %netineterface% | Findstr /v "Register"
 echo.
 choice /n /m "View another interface? [Y,N]: "
-if %ERRORLEVEL% ==1 goto Networkinfo
+if %ERRORLEVEL% ==1 goto NetworkInfo
 goto start
 
-:Networktests
+:NetworkTests
 cls
 echo =============
 echo Network Tests
 echo =============
 echo.
-echo Select what type of test you would like:
+echo Select type of test to run:
 echo.
-echo 1) Ping DC server (DNS and IP)
-echo 2) Tracert DC server (DNS and IP)
-echo 3) Ping Internet (DNS and IP)
-echo 4) Tracert Google (DNS and IP)
-echo 5) Specify a target to ping
-echo 6) Specify a target to tracert
-echo 7) Specify a target to pathping
-echo 8) Back to main menu
+echo 1) Ping Google (DNS and IP)
+echo 2) Tracert Google (IP)
+echo 3) Specify a target to Ping
+echo 4) Specify a target to Tracert
+echo 5) Specify a target to Pathping
+echo 6) Back to main menu
 echo.
-choice /n /c 12345678 /m "Select 1-6: "
-if %ERRORLEVEL% ==1 goto Googleping
-if %ERRORLEVEL% ==2 goto Googletrace
-if %ERRORLEVEL% ==3 goto Customping
-if %ERRORLEVEL% ==4 goto customtracert
-if %ERRORLEVEL% ==5 goto custompathping
+choice /n /c 123456 /m "Select 1-6: "
+if %ERRORLEVEL% ==1 goto GooglePing
+if %ERRORLEVEL% ==2 goto GoogleTracert
+if %ERRORLEVEL% ==3 goto CustomPing
+if %ERRORLEVEL% ==4 goto CustomTracert
+if %ERRORLEVEL% ==5 goto CustomPathping
 if %ERRORLEVEL% ==6 goto Start
 
-:Googleping
+:GooglePing
 cls
 echo ===================
-echo Google ping...
+echo Google Ping...
 echo ===================
 ping -4 8.8.8.8
 ping -4 google.com
@@ -121,18 +129,17 @@ echo.
 pause
 goto Networktests
 
-:Googletrace
+:GoogleTracert
 cls
 echo ===================
-echo Google trace...
+echo Google Tracert...
 echo ===================
 tracert -4 8.8.8.8
-tracert -4 google.com
 echo.
 pause
 goto Networktests
 
-:Customping
+:CustomPing
 cls
 echo ================
 echo Custom Ping...
@@ -141,7 +148,7 @@ echo.
 set target=
 set /p target=Enter IP/Name to ping: 
 
-:custompingrepeat
+:CustomPingRepeat
 ping -4 %target%
 echo.
 choice /m "Ping target again?"
@@ -151,16 +158,16 @@ choice /m "Ping something else?"
 if %ERRORLEVEL% ==1 goto Customping
 goto Networktests
 
-:customtracert
+:CustomTracert
 cls
 echo ================
-echo Custom Trace...
+echo Custom Tracert...
 echo ================
 echo.
 set target=
 set /p target=Enter IP/Name to trace: 
 
-:customtracerepeat
+:CustomTracertRepeat
 tracert -4 %target%
 echo.
 choice /m "Trace target again?"
@@ -170,7 +177,7 @@ choice /m "Trace soemthing else?"
 if %ERRORLEVEL% ==1 goto Customtracert
 goto Networktests
 
-:custompathping
+:CustomPathping
 cls
 echo ================
 echo Custom Pathping...
@@ -179,7 +186,7 @@ echo.
 set target=
 set /p target=Enter IP/Name to pathping: 
 
-:custompathpingrepeat
+:CustomPathpingRepeat
 pathping -4 %target%
 echo.
 choice /m "Pathping target again?"
