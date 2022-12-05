@@ -1,4 +1,7 @@
 rem Repo location
+echo Safety before executing
+echo.
+pause
 set repo=C:\PathToRepo\.git
 cd /d %repo%
 rem Create and switch to new branch "tmp"
