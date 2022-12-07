@@ -1,8 +1,11 @@
+@echo off
 rem Repo location
-echo Safety before executing
+set repo=C:\PathToRepo
+cls
+echo.
+echo Safety before executing rebase on %repo%
 echo.
 pause
-set repo=C:\PathToRepo\.git
 cd /d %repo%
 if not %ERRORLEVEL% == 0 echo Location does not exist & echo. & pause & exit
 rem Create and switch to new branch "tmp"
@@ -15,7 +18,11 @@ rem Delete "main" branch
 git branch -D main
 rem Rename "tmp" branch to "main"
 git branch -m main
+choice /m "Continue with final push?
+if %ERRORLEVEL% == 1 goto push
+if not %ERRORLEVEL% == 1 exit
 rem Update repository
+:push
 git push -f origin main
 echo.
 pause
