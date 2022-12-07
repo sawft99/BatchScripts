@@ -18,7 +18,7 @@ rem Delete "main" branch
 git branch -D main
 rem Rename "tmp" branch to "main"
 git branch -m main
-choice /m "Continue with final push?
+choice /m "Continue with final push?"
 if %ERRORLEVEL% == 1 goto push
 if not %ERRORLEVEL% == 1 exit
 rem Update repository
